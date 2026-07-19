@@ -12,24 +12,73 @@ const workApi     = require('../controllers/api/work');
 const marketApi   = require('../controllers/api/market');
 const businessApi = require('../controllers/api/business');
 
+// Mirrors the pattern used by nodebb-plugin-custom-pages:
+// - registers both /path and /api/path so ajaxify works
+// - sets res.locals.isAPI so NodeBB knows whether to wrap in full HTML or return JSON
+// - runs the NodeBB middleware chain manually (buildHeader for direct, skip for API)
+function runMiddlewares(middlewares, req, res) {
+	return new Promise((resolve, reject) => {
+		let i = 0;
+		function next(err) {
+			if (err) return reject(err);
+			if (i >= middlewares.length) return resolve();
+			const mw = middlewares[i++];
+			try { mw(req, res, next); } catch (e) { reject(e); }
+		}
+		next();
+	});
+}
+
+function makePageHandler(mw, controller) {
+	return async function (req, res, next) {
+		try {
+			res.locals.isAPI = req.path.startsWith('/api');
+
+			let middlewares = [
+				mw.maintenanceMode,
+				mw.registrationComplete,
+				mw.pageView,
+				mw.pluginHooks,
+			].filter(Boolean);
+
+			if (!res.locals.isAPI) {
+				middlewares = [
+					mw.busyCheck,
+					mw.applyCSRF,
+					mw.buildHeader,
+				].concat(middlewares).filter(Boolean);
+			}
+
+			await runMiddlewares(middlewares, req, res);
+			await controller(req, res, next);
+		} catch (err) {
+			next(err);
+		}
+	};
+}
+
 exports.setupPageRoutes = async function (router, mw) {
-	// helpers.setupPageRoute registers BOTH:
-	//   GET /kapitalia/dashboard        (direct browser navigation, full HTML)
-	//   GET /api/kapitalia/dashboard    (ajaxify AJAX request, JSON response)
-	// Without the /api/* route NodeBB's ajaxify shows "page not found" even
-	// though the direct route works.
-	const helpers = require.main.require('./src/routes/helpers');
-	const auth = [mw.ensureLoggedIn];
+	const auth = mw.ensureLoggedIn;
 
 	router.get('/kapitalia', (req, res) => res.redirect('/kapitalia/dashboard'));
 
-	helpers.setupPageRoute(router, '/kapitalia/dashboard', auth, dashboard.render);
-	helpers.setupPageRoute(router, '/kapitalia/career',    auth, career.render);
-	helpers.setupPageRoute(router, '/kapitalia/market',    auth, market.render);
-	helpers.setupPageRoute(router, '/kapitalia/portfolio', auth, portfolio.render);
-	helpers.setupPageRoute(router, '/kapitalia/business',  auth, business.render);
-	helpers.setupPageRoute(router, '/kapitalia/missions',  auth, missions.render);
-	helpers.setupPageRoute(router, '/kapitalia/ranking',   auth, ranking.render);
+	const pages = [
+		['/kapitalia/dashboard', dashboard.render],
+		['/kapitalia/career',    career.render],
+		['/kapitalia/market',    market.render],
+		['/kapitalia/portfolio', portfolio.render],
+		['/kapitalia/business',  business.render],
+		['/kapitalia/missions',  missions.render],
+		['/kapitalia/ranking',   ranking.render],
+	];
+
+	for (const [path, controller] of pages) {
+		const handler = makePageHandler(mw, controller);
+		// Direct navigation (full HTML page)
+		router.get(path, auth, handler);
+		// Ajaxify navigation (JSON response, NodeBB client renders it)
+		router.get('/api' + path, auth, handler);
+	}
 };
 
 exports.setupApiRoutes = async function (router, mw) {

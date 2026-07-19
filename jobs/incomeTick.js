@@ -1,8 +1,8 @@
 'use strict';
 
 const cron    = require('node-cron');
-const winston = require.main.require('winston');
-const db      = require.main.require('./src/database');
+const winston = nodebb.require('winston');
+const db      = nodebb.require('./src/database');
 
 let job = null;
 

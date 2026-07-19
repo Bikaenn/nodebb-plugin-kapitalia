@@ -1,6 +1,6 @@
 'use strict';
 
-const db = require.main.require('./src/database');
+const db = nodebb.require('./src/database');
 const PlayerService = require('./PlayerService');
 const { deserialize, serialize, STOCKS } = require('../models/Stock');
 

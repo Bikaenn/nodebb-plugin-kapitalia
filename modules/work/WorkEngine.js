@@ -1,6 +1,6 @@
 'use strict';
 
-const db = require.main.require('./src/database');
+const db = nodebb.require('./src/database');
 const PlayerService  = require('../../services/PlayerService');
 const CareerService  = require('../../services/CareerService');
 const financialAnalysis = require('./tasks/financial_analysis');

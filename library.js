@@ -1,7 +1,7 @@
 'use strict';
 
-const nconf = require.main.require('nconf');
-const winston = require.main.require('winston');
+const nconf = nodebb.require('nconf');
+const winston = nodebb.require('winston');
 
 const routes = require('./routes');
 const PlayerService = require('./services/PlayerService');
