@@ -1,0 +1,24 @@
+{
+  "id": "nodebb-plugin-kapitalia",
+  "name": "Kapitalia – Finance MMO",
+  "description": "A browser-based financial MMO integrated into NodeBB. Players earn money through work tasks, invest in stocks, buy companies and compete on the leaderboard.",
+  "url": "https://github.com/your-org/nodebb-plugin-kapitalia",
+  "library": "./library.js",
+  "staticDirs": {
+    "kapitalia": "./public"
+  },
+  "scss": [
+    "./public/css/kapitalia.scss"
+  ],
+  "templates": "./templates",
+  "languages": "./languages",
+  "hooks": [
+    { "hook": "static:app.load",           "method": "init" },
+    { "hook": "filter:account/profile.build", "method": "addProfileData" },
+    { "hook": "filter:admin.header.build", "method": "addAdminNavigation" },
+    { "hook": "filter:post.save",          "method": "onPostSave" }
+  ],
+  "nbbpm": {
+    "compat": ">=4.0.0 <5.0.0"
+  }
+}

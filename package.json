@@ -1,0 +1,20 @@
+{
+  "name": "nodebb-plugin-kapitalia",
+  "version": "0.1.0",
+  "description": "Kapitalia – Finance MMO Plugin for NodeBB v4",
+  "main": "library.js",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "node-cron": "^3.0.3"
+  },
+  "nbbpm": {
+    "compat": ">=4.0.0 <5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/nodebb-plugin-kapitalia"
+  },
+  "license": "MIT"
+}
