@@ -13,17 +13,19 @@ const marketApi   = require('../controllers/api/market');
 const businessApi = require('../controllers/api/business');
 
 exports.setupPageRoutes = async function (router, mw) {
-	const auth = mw.ensureLoggedIn;
+	// buildHeader sets up the NodeBB page frame (navigation, user session, theme).
+	// ensureLoggedIn redirects anonymous visitors to the login page.
+	const pageMiddleware = [mw.buildHeader, mw.ensureLoggedIn];
 
 	router.get('/kapitalia', (req, res) => res.redirect('/kapitalia/dashboard'));
 
-	router.get('/kapitalia/dashboard', auth, dashboard.render);
-	router.get('/kapitalia/career',    auth, career.render);
-	router.get('/kapitalia/market',    auth, market.render);
-	router.get('/kapitalia/portfolio', auth, portfolio.render);
-	router.get('/kapitalia/business',  auth, business.render);
-	router.get('/kapitalia/missions',  auth, missions.render);
-	router.get('/kapitalia/ranking',   auth, ranking.render);
+	router.get('/kapitalia/dashboard', pageMiddleware, dashboard.render);
+	router.get('/kapitalia/career',    pageMiddleware, career.render);
+	router.get('/kapitalia/market',    pageMiddleware, market.render);
+	router.get('/kapitalia/portfolio', pageMiddleware, portfolio.render);
+	router.get('/kapitalia/business',  pageMiddleware, business.render);
+	router.get('/kapitalia/missions',  pageMiddleware, missions.render);
+	router.get('/kapitalia/ranking',   pageMiddleware, ranking.render);
 };
 
 exports.setupApiRoutes = async function (router, mw) {
