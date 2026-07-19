@@ -13,24 +13,21 @@ const marketApi   = require('../controllers/api/market');
 const businessApi = require('../controllers/api/business');
 
 exports.setupPageRoutes = async function (router, mw) {
-	// helpers is required here (not from params) because NodeBB v4.14
-	// does not always pass helpers in static:app.load params
-	const helpers = require.main.require('./src/routes/helpers');
-	const auth = [mw.ensureLoggedIn];
+	const auth = mw.ensureLoggedIn;
 
 	router.get('/kapitalia', (req, res) => res.redirect('/kapitalia/dashboard'));
 
-	helpers.setupPageRoute(router, '/kapitalia/dashboard', auth, dashboard.render);
-	helpers.setupPageRoute(router, '/kapitalia/career',    auth, career.render);
-	helpers.setupPageRoute(router, '/kapitalia/market',    auth, market.render);
-	helpers.setupPageRoute(router, '/kapitalia/portfolio', auth, portfolio.render);
-	helpers.setupPageRoute(router, '/kapitalia/business',  auth, business.render);
-	helpers.setupPageRoute(router, '/kapitalia/missions',  auth, missions.render);
-	helpers.setupPageRoute(router, '/kapitalia/ranking',   auth, ranking.render);
+	router.get('/kapitalia/dashboard', auth, dashboard.render);
+	router.get('/kapitalia/career',    auth, career.render);
+	router.get('/kapitalia/market',    auth, market.render);
+	router.get('/kapitalia/portfolio', auth, portfolio.render);
+	router.get('/kapitalia/business',  auth, business.render);
+	router.get('/kapitalia/missions',  auth, missions.render);
+	router.get('/kapitalia/ranking',   auth, ranking.render);
 };
 
 exports.setupApiRoutes = async function (router, mw) {
-	const auth = [mw.ensureLoggedIn];
+	const auth = mw.ensureLoggedIn;
 
 	router.post('/api/kapitalia/work/submit',  auth, workApi.submit);
 	router.post('/api/kapitalia/market/buy',   auth, marketApi.buy);
