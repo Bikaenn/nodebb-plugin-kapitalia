@@ -8,14 +8,16 @@ const business   = require('../controllers/business');
 const missions   = require('../controllers/missions');
 const ranking    = require('../controllers/ranking');
 
-const workApi    = require('../controllers/api/work');
-const marketApi  = require('../controllers/api/market');
+const workApi     = require('../controllers/api/work');
+const marketApi   = require('../controllers/api/market');
 const businessApi = require('../controllers/api/business');
 
-exports.setupPageRoutes = async function (router, mw, helpers) {
+exports.setupPageRoutes = async function (router, mw) {
+	// helpers is required here (not from params) because NodeBB v4.14
+	// does not always pass helpers in static:app.load params
+	const helpers = require.main.require('./src/routes/helpers');
 	const auth = [mw.ensureLoggedIn];
 
-	// Root redirect
 	router.get('/kapitalia', (req, res) => res.redirect('/kapitalia/dashboard'));
 
 	helpers.setupPageRoute(router, '/kapitalia/dashboard', auth, dashboard.render);

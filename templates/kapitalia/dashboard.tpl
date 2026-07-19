@@ -1,7 +1,7 @@
-<!-- IMPORT partials/nav.tpl -->
+<!-- IMPORT kapitalia/partials/nav.tpl -->
 
 <div class="container-fluid kapitalia-page">
-	<!-- IMPORT partials/stats-bar.tpl -->
+	<!-- IMPORT kapitalia/partials/stats-bar.tpl -->
 
 	<h2 class="mb-4"><i class="fa fa-tachometer-alt"></i> Dashboard</h2>
 

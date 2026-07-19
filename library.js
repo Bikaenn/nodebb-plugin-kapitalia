@@ -11,11 +11,17 @@ const EventBus = require('./modules/events/EventBus');
 const Plugin = module.exports;
 
 Plugin.init = async function (params) {
-	const { router, middleware, helpers } = params;
+	const { router, middleware } = params;
 	winston.info('[Kapitalia] Initializing plugin routes');
 
-	await routes.setupPageRoutes(router, middleware, helpers);
-	await routes.setupApiRoutes(router, middleware);
+	try {
+		await routes.setupPageRoutes(router, middleware);
+		await routes.setupApiRoutes(router, middleware);
+		winston.info('[Kapitalia] Routes registered successfully');
+	} catch (e) {
+		winston.error('[Kapitalia] Failed to register routes:', e);
+		return;
+	}
 
 	if (nconf.get('runJobs')) {
 		winston.info('[Kapitalia] Starting background jobs (this instance runs jobs)');

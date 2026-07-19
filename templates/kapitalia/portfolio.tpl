@@ -1,8 +1,8 @@
-<!-- IMPORT partials/nav.tpl -->
+<!-- IMPORT kapitalia/partials/nav.tpl -->
 
 <div class="container-fluid kapitalia-page">
-	<!-- IMPORT partials/stats-bar.tpl -->
-	<!-- IMPORT partials/alerts.tpl -->
+	<!-- IMPORT kapitalia/partials/stats-bar.tpl -->
+	<!-- IMPORT kapitalia/partials/alerts.tpl -->
 
 	<h2 class="mb-4"><i class="fa fa-wallet"></i> Portfolio</h2>
 

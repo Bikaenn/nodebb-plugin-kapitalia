@@ -1,7 +1,7 @@
-<!-- IMPORT partials/nav.tpl -->
+<!-- IMPORT kapitalia/partials/nav.tpl -->
 
 <div class="container-fluid kapitalia-page">
-	<!-- IMPORT partials/stats-bar.tpl -->
+	<!-- IMPORT kapitalia/partials/stats-bar.tpl -->
 
 	<div class="d-flex justify-content-between align-items-center mb-4">
 		<h2 class="mb-0"><i class="fa fa-trophy"></i> Rangliste</h2>
