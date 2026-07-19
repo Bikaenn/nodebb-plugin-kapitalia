@@ -1,6 +1,6 @@
 'use strict';
 
-const winston = nodebb.require('winston');
+const winston = require.main.require('winston');
 const StockService   = require('../../services/StockService');
 const MissionService = require('../../services/MissionService');
 
