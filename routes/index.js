@@ -13,19 +13,23 @@ const marketApi   = require('../controllers/api/market');
 const businessApi = require('../controllers/api/business');
 
 exports.setupPageRoutes = async function (router, mw) {
-	// buildHeader sets up the NodeBB page frame (navigation, user session, theme).
-	// ensureLoggedIn redirects anonymous visitors to the login page.
-	const pageMiddleware = [mw.buildHeader, mw.ensureLoggedIn];
+	// helpers.setupPageRoute registers BOTH:
+	//   GET /kapitalia/dashboard        (direct browser navigation, full HTML)
+	//   GET /api/kapitalia/dashboard    (ajaxify AJAX request, JSON response)
+	// Without the /api/* route NodeBB's ajaxify shows "page not found" even
+	// though the direct route works.
+	const helpers = require.main.require('./src/routes/helpers');
+	const auth = [mw.ensureLoggedIn];
 
 	router.get('/kapitalia', (req, res) => res.redirect('/kapitalia/dashboard'));
 
-	router.get('/kapitalia/dashboard', pageMiddleware, dashboard.render);
-	router.get('/kapitalia/career',    pageMiddleware, career.render);
-	router.get('/kapitalia/market',    pageMiddleware, market.render);
-	router.get('/kapitalia/portfolio', pageMiddleware, portfolio.render);
-	router.get('/kapitalia/business',  pageMiddleware, business.render);
-	router.get('/kapitalia/missions',  pageMiddleware, missions.render);
-	router.get('/kapitalia/ranking',   pageMiddleware, ranking.render);
+	helpers.setupPageRoute(router, '/kapitalia/dashboard', auth, dashboard.render);
+	helpers.setupPageRoute(router, '/kapitalia/career',    auth, career.render);
+	helpers.setupPageRoute(router, '/kapitalia/market',    auth, market.render);
+	helpers.setupPageRoute(router, '/kapitalia/portfolio', auth, portfolio.render);
+	helpers.setupPageRoute(router, '/kapitalia/business',  auth, business.render);
+	helpers.setupPageRoute(router, '/kapitalia/missions',  auth, missions.render);
+	helpers.setupPageRoute(router, '/kapitalia/ranking',   auth, ranking.render);
 };
 
 exports.setupApiRoutes = async function (router, mw) {
